@@ -18,14 +18,18 @@ protocol Tankeable {
 protocol Feedable {
     func feed()
 }
-protocol Walkable {}
-protocol Cleanable {}
+protocol Walkable {
+    func takeOutForWalk()
+}
+protocol Cleanable {
+    func cleanThisPlace()
+}
 
 typealias CageableAnimal = Cageable & Animal
 typealias TankeableAnimal = Tankeable & Animal
 
 // estructuras animales:
-struct LandAnimal: CageableAnimal, Feedable {
+struct LandAnimal: CageableAnimal, Feedable, Walkable {
     var type: AnimalType
     var name: String
 
@@ -39,6 +43,10 @@ struct LandAnimal: CageableAnimal, Feedable {
     
     func feed() {
         print("This \(name) is being fed.")
+    }
+    
+    func takeOutForWalk() {
+        print("This \(name) is being taken out for a walk.")
     }
 }
 
@@ -77,7 +85,7 @@ struct SeaAnimal: TankeableAnimal, Feedable {
 }
 
 // estructuras jaulas:
-struct Cage {
+struct Cage: Cleanable {
     var occupants: [CageableAnimal] = []
 
     func cageLandAnimal() {
@@ -103,9 +111,13 @@ struct Cage {
             animal.setFree()
         }
     }
+    
+    func cleanThisPlace() {
+        print("This place is being cleaned.")
+    }
 }
 
-struct Tank {
+struct Tank: Cleanable {
     var occupants: [TankeableAnimal] = []
 
     func putSeaAnimalInTanke() {
@@ -119,14 +131,21 @@ struct Tank {
             animal.setFree()
         }
     }
+    
+    func cleanThisPlace() {
+        print("This place is being cleaned.")
+    }
 }
 
 // instancias:
 var cage = Cage()
+cage.cleanThisPlace()
 var tank = Tank()
+cage.cleanThisPlace()
 
 var dog = LandAnimal(type: .land, name: "dog")
 dog.feed()
+dog.takeOutForWalk()
 cage.occupants.append(dog)
 cage.cageLandAnimal()
 print(cage)

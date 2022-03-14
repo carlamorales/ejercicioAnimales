@@ -10,6 +10,9 @@ protocol Animal {
 protocol Cageable {
     func getInCage()
 }
+protocol Releasable {
+    func setFree()
+}
 protocol Tankeable {
     func getInTank()
 }
@@ -17,44 +20,62 @@ protocol Walkable {}
 protocol Feedable {}
 protocol Cleanable {}
 
-typealias CageableAnimal = Cageable & Animal
-typealias TankeableAnimal = Tankeable & Animal
+typealias CageableAndReleasableAnimal = Cageable & Releasable & Animal
+typealias TankeableAndReleasableAnimal = Tankeable & Releasable & Animal
 
 // estructuras animales:
-struct LandAnimal: CageableAnimal {
+struct LandAnimal: CageableAndReleasableAnimal {
     var type: AnimalType
     var name: String
 
     func getInCage() {
-        print("The \(name) it's in the cage!")
+        print("The \(name) is in the cage.")
+    }
+
+    func setFree() {
+        print("The \(name) is out of the cage.")
     }
 }
 
-struct AirAnimal: CageableAnimal {
+struct AirAnimal: CageableAndReleasableAnimal {
     var type: AnimalType
     var name: String
 
     func getInCage() {
-        print("The \(name) It's in the cage!")
+        print("The \(name) is in the cage.")
+    }
+
+    func setFree() {
+        print("The \(name) is out of the cage.")
     }
 }
 
-struct SeaAnimal: TankeableAnimal {
+struct SeaAnimal: TankeableAndReleasableAnimal {
     var type: AnimalType
     var name: String
 
     func getInTank() {
-        print("The \(name) it's in the tank!")
+        print("The \(name) is in the tank.")
+    }
+
+    func setFree() {
+        print("The \(name) is out of the tank.")
     }
 }
 
 // estructuras jaulas:
 struct Cage {
-    var occupants: [CageableAnimal] = []
+    var occupants: [CageableAndReleasableAnimal] = []
 
     func cageTheLandAnimal() {
         for animal in occupants where animal.type == .land {
             animal.getInCage()
+        }
+    }
+
+    func setTheLandAnimalFree() {
+        for animal in occupants where animal.type == .land {
+            animal.setFree()
         }
     }
 
@@ -63,14 +84,26 @@ struct Cage {
             animal.getInCage()
         }
     }
+
+    func setTheAirAnimalFree() {
+        for animal in occupants where animal.type == .air {
+            animal.setFree()
+        }
+    }
 }
 
 struct Tank {
-    var occupants: [TankeableAnimal] = []
+    var occupants: [TankeableAndReleasableAnimal] = []
 
     func putInTankeTheSeaAnimal() {
         for animal in occupants where animal.type == .sea {
             animal.getInTank()
+        }
+    }
+
+    func setTheSeaAnimalFree() {
+        for animal in occupants where animal.type == .sea {
+            animal.setFree()
         }
     }
 }
@@ -82,14 +115,23 @@ var tank = Tank()
 var dog = LandAnimal(type: .land, name: "dog")
 cage.occupants.append(dog)
 cage.cageTheLandAnimal()
+print(cage)
+cage.setTheLandAnimalFree()
+cage.occupants.removeLast()
+print(cage)
 
 var parrot = AirAnimal(type: .air, name: "parrot")
 cage.occupants.append(parrot)
 cage.cageTheAirAnimal()
+print(cage)
+cage.setTheAirAnimalFree()
+cage.occupants.removeLast()
+print(cage)
 
 var goldfish = SeaAnimal(type: .sea, name: "goldfish")
 tank.occupants.append(goldfish)
 tank.putInTankeTheSeaAnimal()
-
-print(cage)
+print(tank)
+tank.setTheSeaAnimalFree()
+tank.occupants.removeLast()
 print(tank)

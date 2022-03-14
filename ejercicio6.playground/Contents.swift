@@ -15,15 +15,17 @@ protocol Tankeable {
     func getInTank()
     func setFree()
 }
+protocol Feedable {
+    func feed()
+}
 protocol Walkable {}
-protocol Feedable {}
 protocol Cleanable {}
 
 typealias CageableAnimal = Cageable & Animal
 typealias TankeableAnimal = Tankeable & Animal
 
 // estructuras animales:
-struct LandAnimal: CageableAnimal {
+struct LandAnimal: CageableAnimal, Feedable {
     var type: AnimalType
     var name: String
 
@@ -34,9 +36,13 @@ struct LandAnimal: CageableAnimal {
     func setFree() {
         print("The \(name) is out of the cage.")
     }
+    
+    func feed() {
+        print("This \(name) is being fed.")
+    }
 }
 
-struct AirAnimal: CageableAnimal {
+struct AirAnimal: CageableAnimal, Feedable {
     var type: AnimalType
     var name: String
 
@@ -47,9 +53,13 @@ struct AirAnimal: CageableAnimal {
     func setFree() {
         print("The \(name) is out of the cage.")
     }
+    
+    func feed() {
+        print("This \(name) is being fed.")
+    }
 }
 
-struct SeaAnimal: TankeableAnimal {
+struct SeaAnimal: TankeableAnimal, Feedable {
     var type: AnimalType
     var name: String
 
@@ -59,6 +69,10 @@ struct SeaAnimal: TankeableAnimal {
 
     func setFree() {
         print("The \(name) is out of the tank.")
+    }
+    
+    func feed() {
+        print("This \(name) is being fed.")
     }
 }
 
@@ -112,6 +126,7 @@ var cage = Cage()
 var tank = Tank()
 
 var dog = LandAnimal(type: .land, name: "dog")
+dog.feed()
 cage.occupants.append(dog)
 cage.cageLandAnimal()
 print(cage)
@@ -120,6 +135,7 @@ cage.occupants.removeLast()
 print(cage)
 
 var parrot = AirAnimal(type: .air, name: "parrot")
+parrot.feed()
 cage.occupants.append(parrot)
 cage.cageAirAnimal()
 print(cage)
@@ -128,6 +144,7 @@ cage.occupants.removeLast()
 print(cage)
 
 var goldfish = SeaAnimal(type: .sea, name: "goldfish")
+goldfish.feed()
 tank.occupants.append(goldfish)
 tank.putSeaAnimalInTanke()
 print(tank)
